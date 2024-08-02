@@ -6,3 +6,4 @@
 2) General dependencies: npm install
 - Material UI: npm install @mui/material @emotion/react @emotion/styled
 - Firebase: npm install firebase
+- NextUI: npm install @nextui-org/input
