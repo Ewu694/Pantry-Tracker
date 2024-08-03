@@ -5,7 +5,8 @@ import { firestore } from "@/firebase"
 import { Box, Modal, Typography, Stack, TextField, Button } from '@mui/material'
 import { createTheme, ThemeProvider, styled } from '@mui/material/styles';
 import { collection, query, doc, getDocs, getDoc, setDoc, deleteDoc } from "firebase/firestore";
-import SearchIcon from '@mui/icons-material/Search'; 
+import SearchIcon from '@mui/icons-material/Search';
+import InputAdornment from '@mui/material/InputAdornment';
 
 const darkTheme = createTheme({
   palette: {
@@ -27,6 +28,7 @@ const RemoveButton = styled(Button)(({ theme }) => ({
 }));
 
 export default function Home() {
+  const [isFocused, setIsFocused] = useState(false);
   const [inventory, setInventory] = useState([])
   const [open, setOpen] = useState(false)
   const [itemName, setItemName] = useState('') 
@@ -83,12 +85,20 @@ export default function Home() {
     <ThemeProvider theme = {darkTheme}> 
       <Box width = '100vw' height = '100vh' display = 'flex' flexDirection = 'column' justifyContent = 'center' alignItems = 'center' gap = {2} sx = {{ bgcolor: 'background.default' }}> 
       <TextField
-          id="filled-search"
-          label="Search field"
-          type="search"
-          variant="filled"
-          <SearchIcon />
-        />
+        id="filled-search"
+        label="Search field"
+        type="search"
+        variant="filled"
+        onFocus={() => setIsFocused(true)}
+        onBlur={() => setIsFocused(false)}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon sx={{ color: isFocused ? '#2E4E35' : 'inherit' }} />
+            </InputAdornment>
+          ),
+        }}
+      />
       <Modal open={open} onClose={handleClose}>
         <Box position='absolute' top='50%' left='50%' width={400} boxShadow={24} p={4} display='flex' flexDirection='column' gap={3} sx={{transform: 'translate(-50%, -50%)'}} bgcolor = '#222222'>
           <Typography variant='h6' textAlign= 'center' color = 'white'>Add Item</Typography>
