@@ -32,6 +32,7 @@ export default function Home() {
   const [inventory, setInventory] = useState([])
   const [open, setOpen] = useState(false)
   const [itemName, setItemName] = useState('') 
+  const [searchTerm, setSearchTerm] = useState('');
 
   const updateInventory = async () => {
     const snapshot = query(collection(firestore, 'inventory'))
@@ -74,6 +75,10 @@ export default function Home() {
     await updateInventory()
   }
 
+  const filteredInventory = inventory.filter(item =>
+    item.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   useEffect(() => {
     updateInventory()
   }, [])
@@ -89,6 +94,8 @@ export default function Home() {
         label="Search field"
         type="search"
         variant="filled"
+        value={searchTerm}
+        onChange={(e) => setSearchTerm(e.target.value)}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
         InputProps={{
@@ -135,7 +142,7 @@ export default function Home() {
               <Typography variant='h4' textAlign='center' width='5%'>|</Typography>
               <Typography variant='h4' textAlign='center' width='35%'>Add/Remove</Typography>
             </Box>
-            {inventory.map((item) => (
+            {filteredInventory.map((item) => (
               <Box key={item.name} width='100%' height='50px' display='flex' alignItems='center' bgcolor='#222222' color='white' borderBottom='1px solid #333'>
                 <Typography variant='h5' textAlign='center' width='30%' sx={{ overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
                   {item.name.charAt(0).toUpperCase() + item.name.slice(1)}  
